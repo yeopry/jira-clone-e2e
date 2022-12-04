@@ -12,12 +12,41 @@
 describe('Issue filtering', () => {
   beforeEach(() => {
     cy.visit('/');
+    cy.url().should('eq','https://jira.ivorreic.com/project/board').then((url) => {
+      cy.visit(url + '/board');
+    });
   });
 
-  it('Should filter issues by title', () => {
-    getSearchInput().debounced('type', 'multiple assignee');
-    cy.get('[data-testid="list-issue"]').should('have.length', '1');
+  const issueToValidate = [
+    {
+      issueName: 'you can',
+      expectedAmountOfIssues: '2',
+    },
+    {
+      issueName: 'multiple assignees',
+      expectedAmountOfIssues: '1',
+    },
+    {
+      issueName: 'an issue',
+      expectedAmountOfIssues: '3',
+    }
+  ]
+  for (let issue of issueToValidate) {
+    it(`Should filter issues by title: ${issue.issueName}`, () => {
+      getSearchInput().debounced('type', issue.issueName);
+      cy.get('[data-testid="list-issue"]').should('have.length', issue.expectedAmountOfIssues);
+    });
+  }
+
+  /* Possible solution using forEach:
+  it(`Should filter issues by title: `, () => {
+    issuesToValidate.forEach(issue => {
+      getSearchInput().clear().debounced('type', issue.issueName);
+      cy.get('[data-testid="list-issue"]')
+        .should('have.length', issue.expectedAmountOfIssues);
+    });
   });
+  */
 
   /**
    * New tests can be created here for practice

@@ -2,7 +2,7 @@ describe('Issue create', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.intercept('GET','**/currentUser').as('currentUserApiRequest')
-    cy.url().should('eq', 'http://34.247.67.214:8080/project').then((url) => {
+    cy.url().should('eq', 'https://jira.ivorreic.com/project/board').then((url) => {
       cy.wait('@currentUserApiRequest')
       cy.visit(url + '/settings?modal-issue-create=true');
     });
@@ -38,7 +38,7 @@ describe('Issue create', () => {
     });
   });
 
-  it('Should validate title is required field if missing', () => {
+  it.skip('Should validate title is required field if missing', () => {
     cy.get('[data-testid="modal:issue-create"]').within(() => {
       cy.get('[data-testid="select:reporterId"]').children().then(()=>{
         cy.get('button[type="submit"]').click();

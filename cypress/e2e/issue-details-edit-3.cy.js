@@ -34,13 +34,13 @@
 describe('Issue details editing', () => {
   beforeEach(() => {
     cy.visit('/');
-    cy.url().should('eq', 'http://34.247.67.214:8080/project').then((url) => {
+    cy.url().should('eq', 'https://jira.ivorreic.com/project/board').then((url) => {
       cy.visit(url + '/board');
       cy.contains('This is an issue of type: Task.').click();
     });
   });
 
-  it('Should update type, status, assignees, reporter, priority successfully', () => {
+  it.only('Should update type, status, assignees, reporter, priority successfully', () => {
     getIssueDetailsModal().within(() => {
       cy.get('[data-testid="select:type"]').click('bottomRight');
       cy.get('[data-testid="select-option:Story"]')
@@ -109,5 +109,47 @@ describe('Issue details editing', () => {
 
   });
 
+  // task #3, workshop #17
+  it('Reporter test with regEx', () => {
+    getIssueDetailsModal().within(() => {
+      cy.get('[data-testid="select:reporter"]').invoke('text')
+        .should('match', /^[A-Za-z ]*$/);
+    });
+  });
+
   const getIssueDetailsModal = () => cy.get('[data-testid="modal:issue-details"]');
+
+  const numberOfPriorities = 5;
+
+  //task #4, workshop #17
+  it(`Check, that priority fields has ${numberOfPriorities} values`, () => {
+    let priorities = [];
+
+    //add already chosen priority to the list
+    cy.get('[data-testid="select:priority"]').invoke('text').then((extractedPriority) => {
+      priorities.push(extractedPriority);
+    })
+
+    //click to open priority dropdown - options
+    cy.get('[data-testid="select:priority"]').click();
+
+    //get number of options from the page
+    cy.get('[data-select-option-value]').then(($options) => {
+      const itemCount = Cypress.$($options).length;
+
+      //iterate through the options and
+      //add text from each option to the list
+      for (let index = 0; index < itemCount; index++) {
+        cy.get('[data-select-option-value]')
+          .eq(index).invoke('text').then((extractedPriority) => {
+            priorities.push(extractedPriority);
+
+            if (index == (itemCount - 1)) {
+              cy.log("TOTAL calculated array length: " + priorities.length);
+              expect(priorities.length).to.be.eq(numberOfPriorities);
+            }
+          });
+      };
+    });
+  });
 });
