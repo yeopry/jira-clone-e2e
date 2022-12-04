@@ -11,6 +11,6 @@ module.exports = defineConfig({
     },
     defaultCommandTimeout: 30000,
     requestTimeout: 15000,
-    projectId: "nb4inc",
+    projectId: "2fahvq",
   },
 });
