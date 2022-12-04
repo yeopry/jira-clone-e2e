@@ -34,7 +34,11 @@
 describe('Issue details editing', () => {
   beforeEach(() => {
     cy.visit('/');
+<<<<<<< HEAD
     cy.url().should('eq', 'https://jira.ivorreic.com/project/board').then((url) => {
+=======
+    cy.url().should('eq', `${Cypress.env('baseUrl')}project`).then((url) => {
+>>>>>>> 2da89e0741511f34c2c672a47960c6d6c3a5778c
       cy.visit(url + '/board');
       cy.contains('This is an issue of type: Task.').click();
     });
